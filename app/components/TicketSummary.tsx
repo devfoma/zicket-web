@@ -4,7 +4,7 @@ import React from 'react';
 
 const TicketSummary = () => {
   return (
-    <section className='border-1 md:w-2/5 border-[#E9E9E9] rounded-xl p-4'>
+    <section className='border-1 lg:w-2/5 border-[#E9E9E9] rounded-xl p-4'>
       <h1 className='text-2xl mb-8 font-semibold text-[#1F1F1F] pb-4 border-b-1 border-[#E9E9E9]'>
         Ticket Summary
       </h1>
@@ -34,11 +34,11 @@ const TicketSummary = () => {
 
           {/* bottom buttons */}
           <div className='flex md:px-2 justify-between items-center'>
-            <div className='flex items-center gap-2 p-2 rounded-lg border-1 border-[#E9E9E9]'>
+            <div className='flex items-center gap-1 md:gap-2 p-2 rounded-lg border-1 border-[#E9E9E9]'>
               <Image src='/gaurd.svg' alt='secured' height={18} width={18} />
               <p className='text-xs'>Anonymous</p>
             </div>
-            <div className='flex items-center gap-2 p-2 rounded-lg border-1 border-[#E9E9E9]'>
+            <div className='flex items-center gap-1 md:gap-2 p-2 rounded-lg border-1 border-[#E9E9E9]'>
               <Image src='/lock.svg' alt='secured' height={18} width={18} />
               <p className='text-xs'>Verified Access</p>
             </div>
@@ -47,7 +47,7 @@ const TicketSummary = () => {
       </div>
 
       {/* ticket stats */}
-      <section className='space-y-4 sm:space-y-8 mt-6 p-4'>
+      <section className='space-y-4 sm:space-y-4 mt-4 p-4'>
         <div className='flex items-center justify-between'>
           <h2 className='font-semibold'>Tickets:</h2>
           <Link
@@ -58,15 +58,15 @@ const TicketSummary = () => {
           </Link>
         </div>
         <div className='flex items-center justify-between'>
-          <p className='text-[#5C6170]'>General</p>
+          <p className='text-[#5C6170] text-sm md:text-base'>General</p>
           <p className='text-[#5C6170]'>$0.00</p>
         </div>
         <div className='flex items-center py-4 border-y-1 border-[#E9E9E9] justify-between'>
-          <p className='text-[#5C6170]'>SUBTOTAL</p>
+          <p className='text-[#5C6170] text-sm md:text-base'>SUBTOTAL</p>
           <p className='text-[#5C6170]'>$0.00</p>
         </div>
-        <div className='flex items-center py-2 justify-between'>
-          <p className='text-[#5C6170]'>TOTAL</p>
+        <div className='flex items-center justify-between'>
+          <p className='text-[#5C6170] text-sm md:text-base'>TOTAL</p>
           <p className='font-semibold'>$0.00</p>
         </div>
       </section>

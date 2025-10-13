@@ -11,7 +11,7 @@ interface TicketModalProps {
 const TicketModal = ({ isOpen, onClose }: TicketModalProps) => {
   if (!isOpen) return null;
   return (
-    <section className='flex m-4 animate-fade-in flex-col gap-8 md:flex-row absolute inset-0 md:inset-10 z-50 bg-white p-4 py-10 md:p-10  overflow-y-auto shadow-lg rounded-xl'>
+    <section className='flex m-4 animate-fade-in flex-col gap-6 lg:flex-row absolute z-50 bg-white p-4 py-10 md:p-10 overflow-y-auto shadow-lg rounded-xl w-11/12  inset-0 mx-auto'>
       <TicketInfo />
       <TicketSummary />
 
