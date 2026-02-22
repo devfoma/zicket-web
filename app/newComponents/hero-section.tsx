@@ -32,8 +32,10 @@ export function HeroSection() {
       </div>
 
       {/* Trust Markers */}
-      <div className="w-full flex items-center justify-center">
-        <Image src="/Buttons.svg" alt="" width="420" height="100" />
+      <div className="w-full flex items-center justify-center gap-6">
+        <div className="text-[#2C0A4A] bg-[#D1B7E6] px-4 py-2">Trust markers</div>
+        <Image src="/stellar.webp" alt="" width="70" height="70" />
+        <Image src="/aztec-logo.png" alt="" width="70" height="70" />
       </div>
     </div>
   );
