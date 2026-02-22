@@ -51,7 +51,7 @@ function Card({ title, date, time, location, price, image, privacyLevel }: Event
       <div className="relative border rounded-xl border-[#E9E9E9]">
         <img src={image} alt="" />
         <div className="absolute top-2 left-2">
-          {getPrivacyLevel(privacyLevel)}
+          {getPrivacyLevel(privacyLevel[0])}
         </div>
       </div>
       <div className="p-4  w-full space-y-4">
