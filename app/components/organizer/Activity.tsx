@@ -1,37 +1,48 @@
-import { IRecentActivities } from '@/lib/types';
 import Image from 'next/image';
 import React from 'react';
+import { IRecentActivities } from '@/lib/types';
 
-const Activity = ({ activity }: { activity: IRecentActivities }) => {
+interface ActivityProps {
+  activity: IRecentActivities;
+}
+
+const Activity = ({ activity }: ActivityProps) => {
+  const { icon, title, titleTag, description, timeStamp } = activity;
+
   return (
-    <div className='rounded-[8px] w-full border-1 border-card-border bg-[#f8f8f8] p-4 flex items-center justify-between gap-3'>
-      <div className='flex items-center gap-3'>
+    <div className='flex items-start gap-3 p-3 rounded-xl bg-[#F8F8F8] border border-[#EFEFEF]'>
+      {/* Icon */}
+      <div className='flex-shrink-0 mt-0.5'>
         <Image
-          src={activity.icon}
-          alt='activity image'
-          width={40}
-          height={40}
+          src={icon}
+          alt='activity icon'
+          width={36}
+          height={36}
         />
-
-        <article>
-          <h2 className='font-medium mb-2 text-dark-gray text-xs'>
-            {activity.title}
-
-            {activity.titleTag && (
-              <span className='bg-white border-1 text-xs font-medium border-card-border rounded-[4px] py-1 px-2 ml-1'>
-                {activity.titleTag}
-              </span>
-            )}
-          </h2>
-          <p className='text-sm text-text-description-light'>
-            {activity.description}
-          </p>
-        </article>
       </div>
 
-      <p className='font-medium text-sm italic text-text-description-gray'>
-        {activity.timeStamp}
-      </p>
+      {/* Content */}
+      <div className='flex-1 min-w-0'>
+        {/* Title row */}
+        <div className='flex flex-wrap items-center gap-1.5'>
+          <span className='text-sm font-medium text-[#1A1A1A]'>{title}</span>
+          {titleTag && (
+            <span className='inline-flex items-center px-2.5 py-0.5 rounded bg-[#EFEFEF] text-xs font-medium text-black whitespace-nowrap bg-white'>
+              {titleTag}
+            </span>
+          )}
+        </div>
+
+        {/* Description */}
+        <p className='mt-1 text-xs text-[#6B6B6B] leading-relaxed'>
+          {description}
+        </p>
+      </div>
+
+      {/* Timestamp */}
+      <div className='flex-shrink-0 text-xs text-[#9B9B9B] whitespace-nowrap mt-0.5'>
+        · {timeStamp}
+      </div>
     </div>
   );
 };

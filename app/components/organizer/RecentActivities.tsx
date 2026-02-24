@@ -1,12 +1,11 @@
 import { IRecentActivities } from '@/lib/types';
 import Image from 'next/image';
-import React, { ReactNode } from 'react';
-
+import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Activity from './Activity';
 
-const recentActivities: IRecentActivities[] = [
+const defaultActivities: IRecentActivities[] = [
   {
     key: 1,
     icon: '/gaurd.svg',
@@ -18,7 +17,7 @@ const recentActivities: IRecentActivities[] = [
   {
     key: 2,
     icon: '/lock.svg',
-    title: ' Privacy Level Updated For',
+    title: 'Privacy Level Updated For',
     titleTag: 'Lagos Crypto Salon',
     description:
       'Event updated to allow verified-only attendance via zkPassport.',
@@ -34,14 +33,23 @@ const recentActivities: IRecentActivities[] = [
   },
 ];
 
-const RecentActivities = () => {
+interface RecentActivitiesProps {
+  activities?: IRecentActivities[];
+  onViewAll?: () => void;
+}
+
+const RecentActivities = ({
+  activities = defaultActivities,
+  onViewAll,
+}: RecentActivitiesProps) => {
   return (
-    <section className='col-span-2 border-1 flex flex-col min-h-[280px] border-card-border rounded-2xl bg-white'>
-      <header className='flex items-center justify-between p-4 border-b-1 border-card-border'>
+    <section className='col-span-2 border border-card-border flex flex-col min-h-[280px] rounded-2xl bg-white'>
+      {/* Header */}
+      <header className='flex items-center justify-between p-4 border-b border-card-border'>
         <div className='flex items-center gap-3'>
           <Image
             src='/history.svg'
-            alt='secured message'
+            alt='recent activities'
             width={32}
             height={32}
           />
@@ -49,20 +57,24 @@ const RecentActivities = () => {
         </div>
 
         <Button
-          variant={'outline'}
-          className='rounded-full flex items-center gap-2'
+          variant='outline'
+          onClick={onViewAll}
+          className='rounded-full flex items-center gap-1 px-4 py-2 h-auto text-xs font-medium text-dark-gray border border-[#E5E5E5] hover:bg-[#F8F8F8] transition-colors'
         >
-          <p className='text-xs font-medium text-dark-gray'>View All</p>
-          <ChevronRight />
+          View All
+          <ChevronRight className='w-3.5 h-3.5' />
         </Button>
       </header>
 
+      {/* Activity List */}
       <main className='p-4 h-full flex w-full'>
-        {recentActivities.length === 0 ? (
-          <p className='text-center my-auto w-full'>No Data to Show yet...</p>
+        {activities.length === 0 ? (
+          <p className='text-center my-auto w-full text-sm text-[#9B9B9B]'>
+            No activities to show yet...
+          </p>
         ) : (
-          <div className='flex flex-col w-full space-y-3'>
-            {recentActivities.map((activity) => (
+          <div className='flex flex-col w-full gap-3'>
+            {activities.map((activity) => (
               <Activity key={activity.key} activity={activity} />
             ))}
           </div>
