@@ -1,86 +1,203 @@
 "use client";
 
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import { Shield, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { ChevronDown } from "lucide-react";
 
-const COLORS = ["#22C55E", "#3B82F6", "#F97316"];
+export type PrivacySplitDatum = {
+  name: "Anonymous" | "Verified" | "Wallet-Required" | string;
+  value: number;
+};
 
-const mockData = [
+const CATEGORY_CONFIG: Record<
+  string,
+  { color: string; iconSrc: string; label: string }
+> = {
+  Anonymous: {
+    color: "#22C55E",
+    iconSrc: "/images/explore/privacy/shield.svg",
+    label: "Anonymous",
+  },
+  Verified: {
+    color: "#3B82F6",
+    iconSrc: "/images/explore/privacy/lock.svg",
+    label: "Verified",
+  },
+  "Wallet-Required": {
+    color: "#F97316",
+    iconSrc: "/images/explore/privacy/key.svg",
+    label: "Wallet-Required",
+  },
+};
+
+const FILTER_OPTIONS = [
+  { value: "this_month", label: "This Month" },
+  { value: "last_month", label: "Last Month" },
+  { value: "this_week", label: "This Week" },
+  { value: "all_time", label: "All Time" },
+];
+
+const DEFAULT_DATA: PrivacySplitDatum[] = [
   { name: "Anonymous", value: 320 },
   { name: "Verified", value: 120 },
   { name: "Wallet-Required", value: 60 },
 ];
 
-export default function PrivacySplitChart({ empty = false }: { empty?: boolean }) {
-  return (
-    <div className="p-6 bg-white rounded-2xl shadow border w-full">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center gap-2">
-            <div className="bg-gray-200 py-2 px-2 rounded-full ">
-                          <Shield className="w-5 h-5 text-black" />
+const EMPTY_DATA: PrivacySplitDatum[] = [{ name: "No data", value: 1 }];
 
-            </div>
-          <h2 className="text-lg text-black ">Privacy Split</h2>
+type PrivacySplitChartProps = {
+  data?: PrivacySplitDatum[];
+  empty?: boolean;
+  title?: string;
+  onFilterChange?: (filter: string) => void;
+};
+
+export default function PrivacySplitChart({
+  data = DEFAULT_DATA,
+  empty = false,
+  title = "Privacy Split",
+  onFilterChange,
+}: PrivacySplitChartProps) {
+  const [selectedFilter, setSelectedFilter] = useState("this_month");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const hasRealData =
+    !empty && data.length > 0 && data.some((item) => item.value > 0);
+
+  const chartData = empty || !hasRealData ? EMPTY_DATA : data;
+  const legendTotal = hasRealData
+    ? data.reduce((sum, item) => sum + item.value, 0)
+    : 0;
+  const isEmptyState = !hasRealData;
+
+  const currentFilterLabel =
+    FILTER_OPTIONS.find((opt) => opt.value === selectedFilter)?.label ??
+    "This Month";
+
+  const handleFilterSelect = (value: string) => {
+    setSelectedFilter(value);
+    setDropdownOpen(false);
+    onFilterChange?.(value);
+  };
+
+  return (
+    <div className="w-full rounded-2xl border bg-white p-6 shadow">
+      {/* Header row */}
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="rounded-full bg-gray-100 p-2">
+            <img
+              src="/images/security-lock.png"
+              alt="Privacy"
+              className="h-5 w-5"
+            />
+          </div>
+          <h2 className="text-base font-medium text-gray-900">{title}</h2>
         </div>
-        <button className="text-sm flex items-center gap-2 text-gray-500 border border-gray-400  rounded-full  px-5 py-1">
-          This Month 
-          <ChevronDown className="mb-1"/>
-        </button>
+
+        {/* Filter dropdown */}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            className="flex items-center gap-1 rounded-full border border-gray-300 px-4 py-1.5 text-sm text-gray-600 hover:bg-gray-50"
+          >
+            {currentFilterLabel}
+            <ChevronDown className="h-4 w-4" />
+          </button>
+
+          {dropdownOpen && (
+            <div className="absolute right-0 top-full z-10 mt-1 min-w-[140px] rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
+              {FILTER_OPTIONS.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => handleFilterSelect(option.value)}
+                  className={`block w-full px-4 py-2 text-left text-sm hover:bg-gray-50 ${
+                    selectedFilter === option.value
+                      ? "bg-gray-50 font-medium text-gray-900"
+                      : "text-gray-600"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      {empty ? (
-        <div className="flex flex-col items-center justify-center h-[280px] text-gray-400">
-          <div className="w-24 h-24 border-[12px] border-gray-200 rounded-full flex items-center justify-center">
-            <span className="text-sm text-gray-600">Privacy</span>
-          </div>
-          <p className="mt-2">No Data to Show yet...</p>
-        </div>
-      ) : (
-        <>
-          <div className="flex items-center gap-4">
-            <ResponsiveContainer width="50%" height={280}>
+      {/* Chart and legend */}
+      <div className="flex flex-col items-center gap-4 md:flex-row md:items-center">
+        {/* Chart container - aligned to left */}
+        <div className="relative h-48 w-48 flex-shrink-0">
+          <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={mockData}
+                data={chartData}
                 dataKey="value"
-                innerRadius={70}
-                outerRadius={110}
-                paddingAngle={3}
+                cx="50%"
+                cy="50%"
+                innerRadius={55}
+                outerRadius={90}
+                paddingAngle={0}
+                strokeWidth={0}
               >
-                <span className="text-black">Privacy</span>
-                {mockData.map((entry, i) => (
-                  <Cell key={`cell-${i}`} fill={COLORS[i % COLORS.length]} />
-                ))}
+                {chartData.map((entry) => {
+                  const config = CATEGORY_CONFIG[entry.name];
+                  const color = isEmptyState
+                    ? "#E5E7EB"
+                    : config?.color ?? "#E5E7EB";
+
+                  return <Cell key={entry.name} fill={color} />;
+                })}
               </Pie>
-              <Tooltip />
+              {!isEmptyState && <Tooltip />}
             </PieChart>
           </ResponsiveContainer>
-<div className="mt-4 text-sm space-y-3 text-gray-800">
-  <p className="flex items-center gap-2">
-    <img src="/images/verify.png" alt="Anonymous" className="w-4 h-4" />
-    64% Anonymous – 320
-  </p>
-  <p className="flex items-center gap-2">
-    <img src="/images/padlock.png" alt="Verified" className="w-4 h-4" />
-    24% Verified – 120
-  </p>
-  <p className="flex items-center gap-2">
-    <img src="/images/key.png" alt="Wallet-Required" className="w-4 h-4" />
-    12% Wallet-Required – 60
-  </p>
-  <p className="font-medium">Total: 500</p>
-</div>
-
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <span className="text-sm font-medium text-gray-600">Privacy</span>
           </div>
-        </>
-      )}
+        </div>
+
+        {/* Legend */}
+        <div className="flex-1">
+          {hasRealData ? (
+            <div className="space-y-3 text-sm">
+              {data.map((item) => {
+                const config = CATEGORY_CONFIG[item.name];
+                if (!config) return null;
+
+                const percentage =
+                  legendTotal > 0
+                    ? Math.round((item.value / legendTotal) * 100)
+                    : 0;
+
+                return (
+                  <div key={item.name} className="flex items-center gap-2">
+                    <img
+                      src={config.iconSrc}
+                      alt={config.label}
+                      className="h-5 w-5"
+                    />
+                    <span className="text-gray-700">
+                      {percentage}% {config.label} - {item.value}
+                    </span>
+                  </div>
+                );
+              })}
+
+              <p className="pt-1 font-medium text-gray-900">
+                Total: &nbsp;{legendTotal}
+              </p>
+            </div>
+          ) : (
+            <div className="flex min-h-[100px] items-center justify-center text-sm text-gray-400">
+              No Data to Show yet...
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -22,7 +22,6 @@ export default function HomePage() {
       <FAQSection />
       <HostInPeace />
       <TrendingNews />
-      
       {/* QR Code Modal Test - Remove after testing */}
       <div className="py-10">
         <QRCodeModalExample />
