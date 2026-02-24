@@ -63,7 +63,7 @@ export function TrendingNews() {
     <section className="max-w-[1200px] mx-auto py-8 lg:py-20">
       <div className="mx-auto px-4">
         <div className="flex justify-between items-center mb-12">
-          <h2 className="text-3xl font-bold">Trending News</h2>
+          <h2 className="text-3xl font-bold text-[#2C0A4A] dark:text-[#D7B5F5]">Trending News</h2>
           <div className="flex gap-2">
             <button
               className="w-9 h-9 flex items-center justify-center rounded-full cursor-pointer group"
@@ -210,7 +210,7 @@ export function TrendingNews() {
         </Swiper>
 
         <div className="flex justify-end mt-8">
-          <button className="bg-none border-b border-[#2C0A4A] text-[16px] font-bold text-[#2C0A4A] flex">
+          <button className="bg-none border-b border-[#2C0A4A] dark:border-[#D7B5F5] text-[16px] font-bold text-[#2C0A4A] dark:text-[#D7B5F5] flex">
             See All News <ArrowUpRight className="w-5 h-5 ml-2" />
           </button>
         </div>
