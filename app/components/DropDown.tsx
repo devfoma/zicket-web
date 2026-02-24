@@ -1,6 +1,12 @@
 "use client";
 import { ArrowRightIcon } from "@/public/svg/svg";
 import { useState } from "react";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 interface DropDownProps {
   isOpen: boolean;
   onToggle: () => void;
@@ -10,6 +16,7 @@ interface DropDownProps {
   }[];
   selectedItem?: string;
   placeHolder: string;
+  className?: string;
 }
 
 const DropDown: React.FC<DropDownProps> = ({
@@ -18,11 +25,15 @@ const DropDown: React.FC<DropDownProps> = ({
   items,
   placeHolder,
   selectedItem,
+  className,
 }) => {
   return (
     <div
       onClick={onToggle}
-      className="relative pl-6 p-3 border border-[#2C0A4A] dark:border-[#D7B5F5] rounded-full cursor-pointer w-full"
+      className={cn(
+        "relative pl-6 p-3 border border-[#2C0A4A] dark:border-[#D7B5F5] rounded-full cursor-pointer w-full",
+        className
+      )}
     >
       <div className="gap-2 text-[#2C0A4A] dark:text-[#D7B5F5] text-sm font-medium flex items-center  justify-between">
         <span className="select-none truncate">
@@ -30,9 +41,8 @@ const DropDown: React.FC<DropDownProps> = ({
         </span>
 
         <span
-          className={`${
-            isOpen ? "rotate-270" : "rotate-85"
-          } transition ease-in-out duration-150`}
+          className={`${isOpen ? "rotate-270" : "rotate-85"
+            } transition ease-in-out duration-150`}
         >
           <ArrowRightIcon />
         </span>
