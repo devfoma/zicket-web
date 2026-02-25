@@ -1,11 +1,14 @@
 "use client";
+
+import { useState, use, useEffect } from "react";
 import EventSlider from "@/app/components/EventSlider";
+import { PurchasedStage } from "@/app/components/explore/EventCheckout/PurchasedStage";
+import { TicketCancellationModal } from "@/app/components/TicketCancellationModal";
+import { dummyEvents } from "@/lib/dummyEvents/events";
 import { EventDetailCard } from "@/app/components/explore/EventCheckout/eventDetailsCard";
+import { WhatYouWillGetCard } from "@/app/components/explore/EventCheckout/WhatYouWillGetCard";
 import { OrganizerCard } from "@/app/components/explore/EventCheckout/OrganizerCard";
 import { TicketInfo } from "@/app/components/explore/EventCheckout/TicketInfo";
-import { WhatYouWillGetCard } from "@/app/components/explore/EventCheckout/WhatYouWillGetCard";
-import { dummyEvents } from "@/lib/dummyEvents/events";
-import { useEffect, use } from "react";
 
 type Props = {
   params: Promise<{ eventId: string }>;
@@ -14,12 +17,24 @@ type Props = {
 export default function EventPage({ params }: Props) {
   const { eventId } = use(params);
   const eventName = eventId.replaceAll("-", " ");
+
   const event = dummyEvents.filter(
     (event) => event.title.toLocaleLowerCase() === eventName.toLocaleLowerCase()
   );
-  useEffect(() => {
-    console.log(event);
-  }, []);
+
+  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [isPaid, setIsPaid] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+
+  const isPurchased = isConfirmed && isPaid;
+
+  const handleStatusChange = (status: { isConfirmed: boolean; isPaid: boolean }) => {
+    setIsConfirmed(status.isConfirmed);
+    setIsPaid(status.isPaid);
+  };
+
+  if (!event || event.length === 0) return <div className="p-20 text-center">Event not found</div>;
+
   return (
     <div className="max-w-7xl mx-auto space-y-15 py-20 px-4">
       <div className="flex gap-1 items-center w-[calc(100vw - 20px)] lg:w-[436px]">
@@ -38,32 +53,55 @@ export default function EventPage({ params }: Props) {
           {eventName}
         </p>
       </div>
-      <div className="space-y-16">
-        <EventDetailCard
-          title={event[0].title}
-          date={event[0].date}
-          time={event[0].time}
-          type={event[0].location}
-          description={event[0].description}
-          tags={event[0].tags}
-          price={event[0].price}
-          privacyType={event[0].privacyLevel[0]}
-        />
-        <div className="flex gap-5 sm:flex-row flex-col">
-          <div className="space-y-5 basis-[55%]">
-            <WhatYouWillGetCard perks={event[0].perks} />
-            <OrganizerCard {...event[0].organizer} />
-          </div>
-          <div className="basis-[45%]">
-            <TicketInfo
-              ticketTypes={event[0].ticketTypes}
-              slotsLeft={event[0].slotsLeft}
-              privacyLevel={event[0].privacyLevel}
-              isPaid={event[0].isPaid}
-            />
+
+      {!isPurchased ? (
+        <div className="space-y-16">
+          <EventDetailCard
+            title={event[0].title}
+            date={event[0].date}
+            time={event[0].time}
+            type={event[0].location}
+            description={event[0].description}
+            tags={event[0].tags}
+            price={event[0].price}
+            privacyType={event[0].privacyLevel[0]}
+          />
+          <div className="flex gap-5 sm:flex-row flex-col">
+            <div className="space-y-5 basis-[55%]">
+              <WhatYouWillGetCard perks={event[0].perks} />
+              <OrganizerCard {...event[0].organizer} />
+            </div>
+            <div className="basis-[45%]">
+              <TicketInfo
+                ticketTypes={event[0].ticketTypes}
+                slotsLeft={event[0].slotsLeft}
+                privacyLevel={event[0].privacyLevel}
+                isPaid={event[0].isPaid}
+                onStatusChange={handleStatusChange}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="max-w-[550px] mx-auto py-10">
+          <PurchasedStage onCancelRegistration={() => setShowCancelModal(true)} />
+        </div>
+      )}
+
+      <TicketCancellationModal
+        isOpen={showCancelModal}
+        onClose={() => setShowCancelModal(false)}
+        ticketId="dummy"
+        userId="dummy"
+        isConfirmed={isConfirmed}
+        isPaid={isPaid}
+        onConfirm={(_, __, updatedState) => {
+          setIsConfirmed(updatedState.isConfirmed);
+          setIsPaid(updatedState.isPaid);
+          setShowCancelModal(false);
+        }}
+      />
+
       <div className="pt-5">
         <EventSlider />
       </div>
