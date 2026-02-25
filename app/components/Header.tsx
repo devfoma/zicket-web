@@ -23,6 +23,11 @@ function Header() {
     { name: "Plans", href: "/plans" },
   ];
   const pathname = usePathname();
+
+  if (pathname?.startsWith("/zkorg")) {
+    return null;
+  }
+
   return (
     <div className="pt-5 px-5 sticky top-0 z-20 backdrop-blur-md">
       <div className="pl-6 pr-4 py-4 w-full max-w-[1200px] m-auto border border-[#E4E4E4] bg-[#FFFFFFCC] rounded-[100px] flex items-center justify-between">
@@ -41,11 +46,10 @@ function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-2 text-sm font-medium ${
-                    pathname === link.href
+                  className={`px-2 text-sm font-medium ${pathname === link.href
                       ? "text-[#6917AF] dark:text-[#D7B5F5]"
                       : "text-[#172233] dark:text-white hover:text-[#6917AF] dark:hover:text-[#D7B5F5]"
-                  }`}
+                    }`}
                 >
                   {link.name}
                 </Link>
@@ -80,7 +84,7 @@ function Header() {
             </span>
           </div>
           <a href="/login" className="group flex gap-1 items-center cursor-pointer px-6 py-3 border border-[#8F37DA] bg-gradient-to-b from-[#5E4BF3] to-[#9109D0] text-white dark:text-[#6917AF] rounded-full font-bold transition-all duration-300 dark:hover:drop-shadow-[0_0_2em_rgba(255,255,255,0.3)] dark:hover:text-gray-50">
-            Host Event <ArrowUpRight size="15" className="group-hover:rotate-45 delay-300 transition-all"/>
+            Host Event <ArrowUpRight size="15" className="group-hover:rotate-45 delay-300 transition-all" />
           </a>
         </div>
         {/* mobile nav */}
@@ -100,11 +104,10 @@ function Header() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`px-2 ${
-                      pathname === link.href
+                    className={`px-2 ${pathname === link.href
                         ? "text-[#6917AF]"
                         : "text-[#172233] hover:text-[#6917AF]"
-                    }`}
+                      }`}
                   >
                     {link.name}
                   </Link>
@@ -134,7 +137,7 @@ function Header() {
             </div>
             <a href="/login" className="flex px-6 py-3 bg-[#6917AF] text-white rounded-full font-bold">
               Host Event
-              <ArrowUpRight className="w-5 h-5"/>
+              <ArrowUpRight className="w-5 h-5" />
             </a>
           </div>
         )}
