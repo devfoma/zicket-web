@@ -19,12 +19,14 @@ interface TicketInfoProps {
   slotsLeft: number;
   privacyLevel: string[];
   isPaid: boolean;
+  onStatusChange?: (status: { isConfirmed: boolean; isPaid: boolean }) => void;
 }
 export const TicketInfo: FC<TicketInfoProps> = ({
   ticketTypes,
   slotsLeft,
   privacyLevel,
   isPaid,
+  onStatusChange,
 }) => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<string>(
@@ -72,14 +74,12 @@ export const TicketInfo: FC<TicketInfoProps> = ({
               >
                 <label
                   htmlFor={ticket.name}
-                  className={`cursor-pointer flex px-6 py-4 border rounded-xl justify-between items-center transition-colors ease-in-out duration-300  ${
-                    isSelected ? "border-[#6917AF]" : "border-[#E4E5E6]"
-                  }`}
+                  className={`cursor-pointer flex px-6 py-4 border rounded-xl justify-between items-center transition-colors ease-in-out duration-300  ${isSelected ? "border-[#6917AF]" : "border-[#E4E5E6]"
+                    }`}
                 >
                   <p
-                    className={`font-semibold text-base transition-colors ease-in-out duration-300 ${
-                      isSelected ? "text-[#6917AF] " : ""
-                    }`}
+                    className={`font-semibold text-base transition-colors ease-in-out duration-300 ${isSelected ? "text-[#6917AF] " : ""
+                      }`}
                   >
                     {" "}
                     {ticket.name}
@@ -113,11 +113,10 @@ export const TicketInfo: FC<TicketInfoProps> = ({
                 disabled={quantity === 1 ? true : false}
                 type="button"
                 onClick={decrementQuantity}
-                className={`${
-                  quantity === 1
+                className={`${quantity === 1
                     ? "text-[#667185] cursor-not-allowed"
                     : "text-[#6917AF] dark:text-[#6917AF] cursor-pointer"
-                }`}
+                  }`}
               >
                 <MinusIcon />
               </button>
@@ -128,11 +127,10 @@ export const TicketInfo: FC<TicketInfoProps> = ({
                 type="button"
                 onClick={incrementQuantity}
                 disabled={quantity === availableTickets ? true : false}
-                className={`${
-                  quantity === availableTickets
+                className={`${quantity === availableTickets
                     ? "text-[#667185] dark:text-[#667185] cursor-not-allowed"
                     : "text-[#6917AF] dark:text-[#6917AF] cursor-pointer"
-                }`}
+                  }`}
               >
                 <PlusIcon />
               </button>
@@ -196,7 +194,11 @@ export const TicketInfo: FC<TicketInfoProps> = ({
           <p className="text-xs font-medium">Secure & Instant Payment</p>
         </div>
         <div>
-          <button className="py-4 px-6 bg-[#6917AF] text-[#FCFDFD] flex w-full items-center justify-center font-bold rounded-full gap-3 cursor-pointer hover:bg-[#6917AF]/95 duration-200 ease-in-out transition dark:bg-[#751AC6] dark:text-[#0F0F0F] dark:hover:bg-[#751AC6]/95">
+          <button
+            type="button"
+            onClick={() => onStatusChange?.({ isConfirmed: true, isPaid: true })}
+            className="py-4 px-6 bg-[#6917AF] text-[#FCFDFD] flex w-full items-center justify-center font-bold rounded-full gap-3 cursor-pointer hover:bg-[#6917AF]/95 duration-200 ease-in-out transition dark:bg-[#751AC6] dark:text-[#0F0F0F] dark:hover:bg-[#751AC6]/95"
+          >
             <PasswordProtectedShield />
             <span>
               {isPaid ? "Connect Wallet to Purchase" : "Attend Anonymously"}
