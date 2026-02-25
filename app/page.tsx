@@ -23,7 +23,6 @@ export default function HomePage() {
       <FAQSection />
       <HostInPeace />
       <TrendingNews />
-      
       {/* Modal demos - Remove after testing */}
       <div className="py-10 flex flex-wrap gap-8 justify-center">
         <QRCodeModalExample />
