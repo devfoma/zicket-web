@@ -2,7 +2,7 @@
 import DropDown from "@/app/components/DropDown";
 import { useState } from "react";
 import { AnalyticsIcon } from "@/public/svg/svg";
-import { Card } from "./card";
+import Card from "./card";
 
 const date = [
   "Today",
