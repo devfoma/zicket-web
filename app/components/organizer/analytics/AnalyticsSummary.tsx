@@ -1,8 +1,8 @@
 "use client";
 import AnalyticsDropDown from "./AnalyticsDropDown";
 import { useState } from "react";
-import AnalyticsCard from "./card";
 import { AnalyticsIcon } from "@/public/svg/svg";
+import AnalyticsCard from "./AnalyticsCard";
 
 const dateOptions = [
     "Today",
