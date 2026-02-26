@@ -30,9 +30,8 @@ const DropDown: React.FC<DropDownProps> = ({
         </span>
 
         <span
-          className={`${
-            isOpen ? "rotate-270" : "rotate-85"
-          } transition ease-in-out duration-150`}
+          className={`${isOpen ? "rotate-270" : "rotate-85"
+            } transition ease-in-out duration-150`}
         >
           <ArrowRightIcon />
         </span>

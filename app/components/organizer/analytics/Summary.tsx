@@ -1,8 +1,8 @@
 "use client";
 import DropDown from "@/app/components/DropDown";
 import { useState } from "react";
-import Card from "./card";
 import { AnalyticsIcon } from "@/public/svg/svg";
+import Card from "./card";
 
 const date = [
   "Today",
